@@ -74,7 +74,7 @@ export const getImageStyles = (
     return { width: 0, height: 0 };
   }
 
-  const transform = translate.getTranslateTransform();
+  const transform = translate.getTranslateTransform() as any[]
 
   if (scale) {
     transform.push({ scale }, { perspective: new Animated.Value(1000) });

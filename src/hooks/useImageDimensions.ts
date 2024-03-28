@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 import { Image, ImageURISource } from "react-native";
 
 import { createCache } from "../utils";
-import { Dimensions, ImageSource, Platform } from "../@types";
+import { Dimensions, ImageSource } from "../@types";
+import { Platform } from "react-native";
 
 const CACHE_SIZE = 50;
 const imageDimensionsCache = createCache(CACHE_SIZE);
@@ -35,7 +36,6 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
         return;
       }
 
-      // @ts-ignore
       if (image.uri) {
         const source = image as ImageURISource;
 
@@ -53,14 +53,14 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
               resolve({ width, height });
             },
             () => {
-              resolve({width: 0, height: 0});
+              resolve({width: 100, height: 100});
             }
           );
         } else {
           // @ts-ignore
           Image.getSizeWithHeaders(
-            source.uri,
-            source.headers,
+            source.uri || "",
+            source.headers || {},
             (width: number, height: number) => {
               imageDimensionsCache.set(cacheKey, { width, height });
               resolve({ width, height });
@@ -80,6 +80,7 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
 
   useEffect(() => {
     getImageDimensions(image).then((dimensions) => {
+      setDimensions(dimensions);
       if (!isImageUnmounted) {
         setDimensions(dimensions);
       }

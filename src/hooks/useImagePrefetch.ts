@@ -13,9 +13,10 @@ import { ImageSource } from "../@types";
 const useImagePrefetch = (images: ImageSource[]) => {
   useEffect(() => {
     images.forEach((image) => {
-      //@ts-ignore
+      if(typeof image === "number") {
+        return
+      }
       if (image.uri) {
-        //@ts-ignore
         return Image.prefetch(image.uri);
       }
     });

@@ -1,2 +1,2 @@
-import ImageItem from "./ImageItem.android";
-export default ImageItem;
+import {default as ImageItemWeb} from "./ImageItem.android";
+export default ImageItemWeb;

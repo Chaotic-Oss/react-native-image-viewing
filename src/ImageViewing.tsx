@@ -14,7 +14,7 @@ import {
   View,
   VirtualizedList,
   ModalProps,
-  Modal,
+  Modal
 } from "react-native";
 
 import ImageItem from "./components/ImageItem/ImageItem";
@@ -88,10 +88,6 @@ function ImageViewing({
     [imageList]
   );
 
-  if (!visible) {
-    return null;
-  }
-
   return (
     <Modal
       transparent={presentationStyle === "overFullScreen"}
@@ -124,17 +120,17 @@ function ImageViewing({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           initialScrollIndex={imageIndex}
-          getItem={(_, index) => images[index]}
+          getItem={(_item: any, index: number) => images[index]}
           getItemCount={() => images.length}
-          getItemLayout={(_, index) => ({
+          getItemLayout={(_: any, index: number) => ({
             length: SCREEN_WIDTH,
             offset: SCREEN_WIDTH * index,
             index,
           })}
-          renderItem={({ item: imageSrc }) => (
+          renderItem={({item}: {item: ImageSource}) => (
             <ImageItem
               onZoom={onZoom}
-              imageSrc={imageSrc}
+              imageSrc={item}
               onRequestClose={onRequestCloseEnhanced}
               onLongPress={onLongPress}
               delayLongPress={delayLongPress}
@@ -143,14 +139,13 @@ function ImageViewing({
             />
           )}
           onMomentumScrollEnd={onScroll}
-          //@ts-ignore
-          keyExtractor={(imageSrc, index) =>
-            keyExtractor
-              ? keyExtractor(imageSrc, index)
-              : typeof imageSrc === "number"
-              ? `${imageSrc}`
-              : imageSrc.uri
-          }
+          keyExtractor={(item: ImageSource, index: number) => {
+            return keyExtractor
+              ? keyExtractor(item, index)
+              : typeof item === "number"
+              ? `${item}`
+              : item.uri
+          }}
         />
         {typeof FooterComponent !== "undefined" && (
           <Animated.View
